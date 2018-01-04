@@ -6,7 +6,7 @@ using UIKit;
 
 namespace collectionview
 {
-    public class ViewController : UICollectionViewController
+    public partial class ViewController : UICollectionViewController
     {
 
         private UIBarButtonItem addButton;
@@ -16,20 +16,18 @@ namespace collectionview
 
         public ViewController(UICollectionViewFlowLayout layout) : base(layout)
         {
-            CollectionView.Delegate = new CustomViewDelegate();
+            CollectionView.Delegate = this;
 
             addButton = new UIBarButtonItem(UIBarButtonSystemItem.Add, (s, e) =>
             {
                 AddItem();
             });
 
-
-            NavigationItem.SetRightBarButtonItem(addButton, true);    
+            NavigationItem.SetRightBarButtonItem(addButton, true);
         }
 
         public override void ViewDidLoad()
         {
-
             CollectionView.BackgroundColor = UIColor.White;
             CollectionView.RegisterClassForCell(typeof(CollectionViewCell), CollectionViewCell.CellID);
             CollectionView.Source = new CollectionViewSource(collectionData);

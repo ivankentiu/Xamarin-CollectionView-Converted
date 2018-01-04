@@ -11,14 +11,14 @@ namespace collectionview
         public UIImageView SelectionImage;
         public static NSString CellID = new NSString("collectionViewCell");
 
-        private bool _isEditing;
-        public bool IsEditing
+        private bool _editing;
+        public bool Editing
         {
-            get { return _isEditing; }
+            get { return _editing; }
             set
             {
-                _isEditing = value;
-                SelectionImage.Hidden = !_isEditing;
+                _editing = value;
+                SelectionImage.Hidden = !_editing;
             }
         }
 
@@ -29,9 +29,9 @@ namespace collectionview
             {
                 base.Selected = value;
 
-                if (IsEditing)
+                if (Editing)
                 {
-                    SelectionImage.Image = Selected ? new UIImage("Checked") : new UIImage("Unchecked");
+                    SelectionImage.Image = Selected ? UIImage.FromBundle("Checked") : UIImage.FromBundle("Unchecked");
                 }
             }
         }
@@ -48,10 +48,9 @@ namespace collectionview
 
             SelectionImage = new UIImageView()
             {
-                Image = UIImage.FromBundle("Checked"),
+                Image = UIImage.FromBundle("Unchecked"),
                 ContentMode = UIViewContentMode.ScaleAspectFit,
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = UIColor.Red,
+                TranslatesAutoresizingMaskIntoConstraints = false
             };
 
 
@@ -64,10 +63,10 @@ namespace collectionview
             TitleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             TitleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
 
-            SelectionImage.RightAnchor.ConstraintEqualTo(RightAnchor, 8).Active = true;
-            SelectionImage.BottomAnchor.ConstraintEqualTo(BottomAnchor, 8).Active = true;
-            SelectionImage.WidthAnchor.ConstraintEqualTo(22);
-            SelectionImage.HeightAnchor.ConstraintEqualTo(22);
+            SelectionImage.RightAnchor.ConstraintEqualTo(RightAnchor, -8).Active = true;
+            SelectionImage.BottomAnchor.ConstraintEqualTo(BottomAnchor, -8).Active = true;
+            SelectionImage.WidthAnchor.ConstraintEqualTo(22).Active = true;
+            SelectionImage.HeightAnchor.ConstraintEqualTo(22).Active = true;
 
         }
 

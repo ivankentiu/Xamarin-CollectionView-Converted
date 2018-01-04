@@ -19,7 +19,7 @@ namespace collectionview
         {
             var cell = collectionView.DequeueReusableCell(CollectionViewCell.CellID, indexPath) as CollectionViewCell;
             cell.TitleLabel.Text = CollectionData[(int)indexPath.Item];
-            cell.IsEditing = false;
+            cell.Editing = true;
             return cell;
         }
 
@@ -27,7 +27,6 @@ namespace collectionview
         {
             return CollectionData.Count;
         }
-
        
     }
 }
