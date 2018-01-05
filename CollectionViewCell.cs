@@ -19,6 +19,8 @@ namespace collectionview
             {
                 _editing = value;
                 SelectionImage.Hidden = !_editing;
+                Console.WriteLine($"Editing = {Editing}");
+                Console.WriteLine($"Image is Hidden {SelectionImage.Hidden}");
             }
         }
 
@@ -33,6 +35,7 @@ namespace collectionview
                 {
                     SelectionImage.Image = Selected ? UIImage.FromBundle("Checked") : UIImage.FromBundle("Unchecked");
                 }
+                Console.WriteLine($"Selected = {Selected}");
             }
         }
 

@@ -16,25 +16,28 @@ namespace collectionview
 
         public ViewController(UICollectionViewFlowLayout layout) : base(layout)
         {
-            CollectionView.Delegate = this;
-
             addButton = new UIBarButtonItem(UIBarButtonSystemItem.Add, (s, e) =>
             {
                 AddItem();
             });
 
             NavigationItem.SetRightBarButtonItem(addButton, true);
+            NavigationItem.SetLeftBarButtonItem(EditButtonItem, true);
         }
 
         public override void ViewDidLoad()
         {
             CollectionView.BackgroundColor = UIColor.White;
+
             CollectionView.RegisterClassForCell(typeof(CollectionViewCell), CollectionViewCell.CellID);
-            CollectionView.Source = new CollectionViewSource(collectionData);
+
+            CollectionView.Delegate = this;
+            CollectionView.DataSource = this;
 
             var refresh = new UIRefreshControl();
             refresh.AddTarget(Refresh, UIControlEvent.ValueChanged);
             CollectionView.RefreshControl = refresh;
+
 
         }
 
@@ -62,6 +65,28 @@ namespace collectionview
         {
             AddItem();
             CollectionView.RefreshControl.EndRefreshing();
+        }
+
+        public override void SetEditing(bool editing, bool animated)
+        {
+            base.SetEditing(editing, animated);
+            addButton.Enabled = !editing;
+            CollectionView.AllowsMultipleSelection = editing;
+
+            // Make Sure For VisibleItems Not SelectedItems!
+            var indexes = CollectionView.IndexPathsForVisibleItems;
+
+            foreach (var index in indexes)
+            {
+                var cell = CollectionView.CellForItem(index) as CollectionViewCell;
+                cell.Editing = editing;
+            }
+
+            if (!editing)
+            {
+                NavigationController.ToolbarHidden = true;
+            }
+
         }
 
     }
