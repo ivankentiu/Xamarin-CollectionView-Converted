@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Foundation;
+using System.Linq;
 using CoreGraphics;
 using UIKit;
 
@@ -10,9 +11,9 @@ namespace collectionview
     {
 
         private UIBarButtonItem addButton;
+        private UIBarButtonItem deleteButton;
 
-        List<string> collectionData = new List<string>() { "1  ", "2 ", "3 ", "4 ", "5 " };
-
+        List<string> collectionData = new List<string>() { "1  \U0001F600", "2 \U0001F602", "3 \U0001F606", "4 \U0001F60B", "5 \U0001F929" };
 
         public ViewController(UICollectionViewFlowLayout layout) : base(layout)
         {
@@ -21,8 +22,14 @@ namespace collectionview
                 AddItem();
             });
 
+            deleteButton = new UIBarButtonItem(UIBarButtonSystemItem.Trash, (s, e) =>
+            {
+                DeleteSelected();
+            });
+
             NavigationItem.SetRightBarButtonItem(addButton, true);
             NavigationItem.SetLeftBarButtonItem(EditButtonItem, true);
+
         }
 
         public override void ViewDidLoad()
@@ -38,6 +45,8 @@ namespace collectionview
             refresh.AddTarget(Refresh, UIControlEvent.ValueChanged);
             CollectionView.RefreshControl = refresh;
 
+            SetToolbarItems(new UIBarButtonItem[] { deleteButton }, false);
+            NavigationController.ToolbarHidden = true;
 
         }
 
@@ -53,12 +62,24 @@ namespace collectionview
             {
                 for (var i = 0; i < 2; i++)
                 {
-                    var text = $"{collectionData.Count + 1}  woot";
+                    var text = $"{collectionData.Count + 1} \U0001F60E";
                     collectionData.Add(text);
                     var index = NSIndexPath.FromRowSection(collectionData.Count - 1, 0);
                     CollectionView.InsertItems(new NSIndexPath[] { index });
                 }
             }, null);
+        }
+
+        public void DeleteSelected()
+        {
+            var selected = CollectionView.GetIndexPathsForSelectedItems();
+            var items = selected.Select(i => i.Item).OrderBy(i => i).Reverse();
+            foreach (var item in items)
+            {
+                collectionData.Remove(collectionData[(int)item]);
+            }
+            CollectionView.DeleteItems(selected);
+            NavigationController.ToolbarHidden = true;
         }
 
         public void Refresh(Object sender, EventArgs eventArgs)
@@ -71,6 +92,7 @@ namespace collectionview
         {
             base.SetEditing(editing, animated);
             addButton.Enabled = !editing;
+            deleteButton.Enabled = editing;
             CollectionView.AllowsMultipleSelection = editing;
 
             // Make Sure For VisibleItems Not SelectedItems!
@@ -85,6 +107,10 @@ namespace collectionview
             if (!editing)
             {
                 NavigationController.ToolbarHidden = true;
+            }
+            else
+            {
+                NavigationController.ToolbarHidden = false;
             }
 
         }
